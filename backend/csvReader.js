@@ -6,6 +6,7 @@ const colors = require('colors');
 const dotenv = require('dotenv').config()
 // const {errorHandler} = require('./middleware/errorMiddleware');
 const { connectDB } = require('./config/db')
+const { Schema } = mongoose;
 
 connectDB()
 
@@ -14,7 +15,17 @@ let data = convertCsvToJson.fieldDelimiter(',').formatValueByType().getJsonFromC
 let MongooseSchema = generateSchema.mongoose(data[0]);
 console.log(MongooseSchema)
 
-let NewData = mongoose.model('data1', MongooseSchema)
+const PropertiesSchema = new Schema(MongooseSchema);
+
+PropertiesSchema.set('toJSON', {
+      transform: (document, returnedObject) => {
+          returnedObject.id = returnedObject._id.toString()
+          delete returnedObject._id
+          delete returnedObject.__v
+      }
+})
+
+let NewData = mongoose.model('data1', PropertiesSchema)
 
 // NewData.deleteMany({})
 //     .then(() => console.log(`All data dropped`.blue))

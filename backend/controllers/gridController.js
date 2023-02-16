@@ -4,6 +4,7 @@ const {NewData} = require('../csvReader')
 
 const getGridData = asyncHandler(async (req, res) => {
       let newdata = await NewData.find()
+      console.log("Endpoint Hit")
       res.status(200).send(newdata);
 })
 

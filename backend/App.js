@@ -4,11 +4,21 @@ const dotenv = require('dotenv').config()
 const {errorHandler} = require('./middleware/errorMiddleware');
 const {connectDB} = require('./config/db')
 const convertCsvToJson = require('convert-csv-to-json')
+const cors = require('cors')
 const port = 5000 || process.env.PORT
 
 connectDB()
 
 const app = express()
+
+app.use(cors());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
